@@ -521,7 +521,3 @@ GET /search?v=...&k=3&metric=cosine&algo=hnsw
 ```
 
 ---
-
-## License
-
-MIT - use this however you want.
