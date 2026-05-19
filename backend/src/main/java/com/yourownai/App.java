@@ -257,8 +257,13 @@ public class App {
                     HttpResponse<String> res = client.send(HttpRequest.newBuilder(URI.create(url))
                             .header("Content-Type", "application/json")
                             .POST(HttpRequest.BodyPublishers.ofString(body)).build(), HttpResponse.BodyHandlers.ofString());
+                    if (res.statusCode() != 200) {
+                        System.err.println("Gemini embed failed with status " + res.statusCode() + ": " + res.body());
+                    }
                     return Json.extractNumberArray(res.body(), "values");
-                } catch (Exception ignored) {
+                } catch (Exception ex) {
+                    System.err.println("Gemini embed exception: " + ex.getMessage());
+                    ex.printStackTrace();
                     return List.of();
                 }
             }
@@ -294,9 +299,15 @@ public class App {
                     HttpResponse<String> res = client.send(HttpRequest.newBuilder(URI.create(url))
                             .header("Content-Type", "application/json")
                             .POST(HttpRequest.BodyPublishers.ofString(body)).build(), HttpResponse.BodyHandlers.ofString());
+                    if (res.statusCode() != 200) {
+                        System.err.println("Gemini generate failed with status " + res.statusCode() + ": " + res.body());
+                        return "(Gemini generate failed with status " + res.statusCode() + ")";
+                    }
                     String answer = Json.extractString(res.body(), "text");
                     return answer.isBlank() ? "(No response)" : answer;
                 } catch (Exception ex) {
+                    System.err.println("Gemini generate exception: " + ex.getMessage());
+                    ex.printStackTrace();
                     return "(Gemini generate failed: " + ex.getMessage() + ")";
                 }
             }
