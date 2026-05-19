@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: semantic-vector-search
+    name: nexus
     runtime: docker
     plan: free
     envVars:
