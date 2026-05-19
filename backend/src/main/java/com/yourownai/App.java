@@ -292,7 +292,7 @@ public class App {
         String generate(String prompt) {
             if (apiKey.startsWith("AIzaSy")) {
                 String model = genModel;
-                if (model.equals("llama3.2") || model.equals("llama3.2:1b")) model = "gemini-1.5-flash";
+                if (model.equals("llama3.2") || model.equals("llama3.2:1b")) model = "gemini-1.5-flash-latest";
                 String url = "https://generativelanguage.googleapis.com/v1/models/" + model + ":generateContent?key=" + apiKey;
                 String body = "{\"contents\":[{\"parts\":[{\"text\":" + Json.str(prompt) + "}]}]}";
                 try {
