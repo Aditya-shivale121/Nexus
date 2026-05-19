@@ -124,8 +124,12 @@ function App() {
   }, [points]);
 
   async function refresh() {
+    const t = Date.now();
     const [itemRes, layerRes, statusRes, docRes] = await Promise.all([
-      fetch(`${API}/items`), fetch(`${API}/hnsw-info`), fetch(`${API}/status`), fetch(`${API}/doc/list`)
+      fetch(`${API}/items?t=${t}`),
+      fetch(`${API}/hnsw-info?t=${t}`),
+      fetch(`${API}/status?t=${t}`),
+      fetch(`${API}/doc/list?t=${t}`)
     ]);
     setItems(await itemRes.json());
     setLayers(await layerRes.json());
