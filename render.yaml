@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: semantic-vector-search
+    runtime: docker
+    plan: free
+    envVars:
+      - key: OLLAMA_BASE_URL
+        value: https://ollama.com
+      - key: OLLAMA_EMBED_MODEL
+        value: nomic-embed-text
+      - key: OLLAMA_GEN_MODEL
+        value: llama3.2
+      - key: OLLAMA_API_KEY
+        sync: false
