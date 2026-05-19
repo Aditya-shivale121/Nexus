@@ -238,6 +238,7 @@ public class App {
         final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
 
         boolean isAvailable() {
+            if (apiKey.startsWith("AIzaSy")) return true;
             try {
                 HttpRequest req = request("/api/tags").GET().timeout(Duration.ofSeconds(5)).build();
                 return client.send(req, HttpResponse.BodyHandlers.ofString()).statusCode() < 500;
@@ -247,6 +248,20 @@ public class App {
         }
 
         List<Double> embed(String text) {
+            if (apiKey.startsWith("AIzaSy")) {
+                String model = embedModel;
+                if (model.equals("nomic-embed-text")) model = "text-embedding-004";
+                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":embedContent?key=" + apiKey;
+                String body = "{\"content\":{\"parts\":[{\"text\":" + Json.str(text) + "}]}}";
+                try {
+                    HttpResponse<String> res = client.send(HttpRequest.newBuilder(URI.create(url))
+                            .header("Content-Type", "application/json")
+                            .POST(HttpRequest.BodyPublishers.ofString(body)).build(), HttpResponse.BodyHandlers.ofString());
+                    return Json.extractNumberArray(res.body(), "values");
+                } catch (Exception ignored) {
+                    return List.of();
+                }
+            }
             String body = "{\"model\":" + Json.str(embedModel) + ",\"prompt\":" + Json.str(text) + "}";
             try {
                 HttpResponse<String> res = client.send(request("/api/embeddings")
@@ -270,6 +285,21 @@ public class App {
         }
 
         String generate(String prompt) {
+            if (apiKey.startsWith("AIzaSy")) {
+                String model = genModel;
+                if (model.equals("llama3.2") || model.equals("llama3.2:1b")) model = "gemini-1.5-flash";
+                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+                String body = "{\"contents\":[{\"parts\":[{\"text\":" + Json.str(prompt) + "}]}]}";
+                try {
+                    HttpResponse<String> res = client.send(HttpRequest.newBuilder(URI.create(url))
+                            .header("Content-Type", "application/json")
+                            .POST(HttpRequest.BodyPublishers.ofString(body)).build(), HttpResponse.BodyHandlers.ofString());
+                    String answer = Json.extractString(res.body(), "text");
+                    return answer.isBlank() ? "(No response)" : answer;
+                } catch (Exception ex) {
+                    return "(Gemini generate failed: " + ex.getMessage() + ")";
+                }
+            }
             String body = "{\"model\":" + Json.str(genModel) + ",\"prompt\":" + Json.str(prompt) + ",\"stream\":false}";
             try {
                 HttpResponse<String> res = client.send(request("/api/generate")
