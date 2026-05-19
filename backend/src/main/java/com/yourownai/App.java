@@ -250,7 +250,7 @@ public class App {
         List<Double> embed(String text) {
             if (apiKey.startsWith("AIzaSy")) {
                 String model = embedModel;
-                if (model.equals("nomic-embed-text")) model = "embedding-001";
+                if (model.equals("nomic-embed-text")) model = "gemini-embedding-001";
                 String url = "https://generativelanguage.googleapis.com/v1/models/" + model + ":embedContent?key=" + apiKey;
                 String body = "{\"content\":{\"parts\":[{\"text\":" + Json.str(text) + "}]}}";
                 try {
