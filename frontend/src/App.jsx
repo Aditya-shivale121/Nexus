@@ -278,6 +278,12 @@ function App() {
     });
   }, [lastEmbedding]);
 
+  useEffect(() => {
+    if (query.trim()) {
+      runSearch();
+    }
+  }, [algo, metric, k]);
+
   async function runSearch() {
     if (!query.trim()) return;
     const emb = textToEmbedding(query);
