@@ -251,7 +251,7 @@ public class App {
             if (apiKey.startsWith("AIzaSy")) {
                 String model = embedModel;
                 if (model.equals("nomic-embed-text")) model = "text-embedding-004";
-                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":embedContent?key=" + apiKey;
+                String url = "https://generativelanguage.googleapis.com/v1/models/" + model + ":embedContent?key=" + apiKey;
                 String body = "{\"content\":{\"parts\":[{\"text\":" + Json.str(text) + "}]}}";
                 try {
                     HttpResponse<String> res = client.send(HttpRequest.newBuilder(URI.create(url))
@@ -293,7 +293,7 @@ public class App {
             if (apiKey.startsWith("AIzaSy")) {
                 String model = genModel;
                 if (model.equals("llama3.2") || model.equals("llama3.2:1b")) model = "gemini-1.5-flash";
-                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+                String url = "https://generativelanguage.googleapis.com/v1/models/" + model + ":generateContent?key=" + apiKey;
                 String body = "{\"contents\":[{\"parts\":[{\"text\":" + Json.str(prompt) + "}]}]}";
                 try {
                     HttpResponse<String> res = client.send(HttpRequest.newBuilder(URI.create(url))
